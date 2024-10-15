@@ -15,6 +15,9 @@ function selectCommentsByArticleId(id) {
 function insertCommentByArticleId(id, newComment) {
   const { username, body } = newComment;
   const queryArray = [body, username, id];
+  if (queryArray.includes(undefined)) {
+    return Promise.reject({ status: 400, msg: "Invalid comment contents" });
+  }
   return db
     .query(
       `

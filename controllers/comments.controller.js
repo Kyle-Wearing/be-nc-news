@@ -21,9 +21,13 @@ function getCommentsByArticleId(req, res, next) {
 
 function postCommentByArticleId(req, res, next) {
   const { article_id } = req.params;
-  insertCommentByArticleId(article_id, req.body).then((comment) => {
-    res.status(201).send(comment);
-  });
+  insertCommentByArticleId(article_id, req.body)
+    .then((comment) => {
+      res.status(201).send(comment);
+    })
+    .catch((err) => {
+      next(err);
+    });
 }
 
 module.exports = { getCommentsByArticleId, postCommentByArticleId };
