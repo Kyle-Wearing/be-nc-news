@@ -147,13 +147,13 @@ describe("POST requests", () => {
         .post("/api/articles/2/comments")
         .send({ username: "butter_bridge", body: "new comment" })
         .expect(201)
-        .then(({ body }) => {
-          expect(body.article_id).toBe(2);
-          expect(body.body).toBe("new comment");
-          expect(body.author).toBe("butter_bridge");
-          expect(body.votes).toBe(0);
-          expect(typeof body.created_at).toBe("string");
-          expect(typeof body.comment_id).toBe("number");
+        .then(({ body: { comment } }) => {
+          expect(comment.article_id).toBe(2);
+          expect(comment.body).toBe("new comment");
+          expect(comment.author).toBe("butter_bridge");
+          expect(comment.votes).toBe(0);
+          expect(typeof comment.created_at).toBe("string");
+          expect(typeof comment.comment_id).toBe("number");
         });
     });
     it("responds 400 - returns an error message if the sent request body doesnt have a username, body or article id", () => {
@@ -163,6 +163,15 @@ describe("POST requests", () => {
         .expect(400)
         .then(({ body: { msg } }) => {
           expect(msg).toBe("Invalid comment contents");
+        });
+    });
+    it("responds 404 - returns an error message if the comment is trying to be posted to an article that does not exist", () => {
+      return request(app)
+        .post("/api/articles/99999/comments")
+        .send({ username: "butter_bridge", body: "new comment" })
+        .expect(404)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("Article does not exist");
         });
     });
   });

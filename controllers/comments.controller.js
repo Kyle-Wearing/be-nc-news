@@ -21,9 +21,14 @@ function getCommentsByArticleId(req, res, next) {
 
 function postCommentByArticleId(req, res, next) {
   const { article_id } = req.params;
-  insertCommentByArticleId(article_id, req.body)
-    .then((comment) => {
-      res.status(201).send(comment);
+  const promises = [
+    selectArticleById(article_id),
+    insertCommentByArticleId(article_id, req.body),
+  ];
+  return Promise.all(promises)
+    .then((result) => {
+      console.log(result[1]);
+      res.status(201).send({ comment: result[1] });
     })
     .catch((err) => {
       next(err);
