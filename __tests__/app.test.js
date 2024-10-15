@@ -139,3 +139,22 @@ describe("GET requests", () => {
     });
   });
 });
+
+describe("POST requests", () => {
+  describe("/api/articles/:article_id/comments", () => {
+    it("responds 201 - returns a newly posted comment object", () => {
+      return request(app)
+        .post("/api/articles/2/comments")
+        .send({ username: "butter_bridge", body: "new comment" })
+        .expect(201)
+        .then(({ body }) => {
+          expect(body.article_id).toBe(2);
+          expect(body.body).toBe("new comment");
+          expect(body.author).toBe("butter_bridge");
+          expect(body.votes).toBe(0);
+          expect(typeof body.created_at).toBe("string");
+          expect(typeof body.comment_id).toBe("number");
+        });
+    });
+  });
+});
