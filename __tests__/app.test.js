@@ -174,5 +174,14 @@ describe("POST requests", () => {
           expect(msg).toBe("Article does not exist");
         });
     });
+    it("responds 400 - returns an error message if the comment is being posted to an invalid id type", () => {
+      return request(app)
+        .post("/api/articles/invalid_id/comments")
+        .send({ username: "butter_bridge", body: "new comment" })
+        .expect(400)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("Invalid id type");
+        });
+    });
   });
 });
