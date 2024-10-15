@@ -4,6 +4,7 @@ const data = require("../db/data/test-data");
 const seed = require("../db/seeds/seed");
 const request = require("supertest");
 const endpointsJSON = require("../endpoints.json");
+require("jest-sorted");
 
 beforeEach(() => seed(data));
 afterAll(() => db.end());
@@ -65,6 +66,34 @@ describe("GET requests", () => {
         .expect(400)
         .then(({ body: { msg } }) => {
           expect(msg).toBe("Invalid id type");
+        });
+    });
+  });
+  describe("/api/articles", () => {
+    it("responds 200 - returns an array of article objects with all article properties", () => {
+      return request(app)
+        .get("/api/articles")
+        .expect(200)
+        .then(({ body: { articles } }) => {
+          expect(articles.length).toBe(13);
+          articles.forEach((article) => {
+            expect(typeof article.author).toBe("string");
+            expect(typeof article.title).toBe("string");
+            expect(typeof article.article_id).toBe("number");
+            expect(typeof article.topic).toBe("string");
+            expect(typeof article.created_at).toBe("string");
+            expect(typeof article.votes).toBe("number");
+            expect(typeof article.article_img_url).toBe("string");
+            expect(typeof article.comment_count).toBe("number");
+          });
+        });
+    });
+    it("should order the articles by date in descending order", () => {
+      return request(app)
+        .get("/api/articles")
+        .expect(200)
+        .then(({ body: { articles } }) => {
+          expect(articles).toBeSorted({ key: "created_at", descending: true });
         });
     });
   });
