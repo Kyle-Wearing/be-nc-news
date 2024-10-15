@@ -1,12 +1,19 @@
 const db = require("../db/connection");
 
 function selectArticleById(id) {
-  return db.query(
-    `
+  return db
+    .query(
+      `
     SELECT * FROM articles
     WHERE article_id = $1;`,
-    [id]
-  );
+      [id]
+    )
+    .then(({ rows }) => {
+      if (rows.length === 0) {
+        return Promise.reject({ status: 404, msg: "Article does not exist" });
+      }
+      return rows[0];
+    });
 }
 
 function selectArticles() {
