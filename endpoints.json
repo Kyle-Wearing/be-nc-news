@@ -61,5 +61,17 @@
         "created_at": "2020-03-01T01:13:00.000Z"
       }
     ]
+  },
+  "POST /api/articles/:article_id/comments": {
+    "description": "posts a comment object to an article",
+    "queries": ["article_id", "username", "body"],
+    "exampleResponse": {
+      "comment_id": 19,
+      "body": "new comment",
+      "article_id": 2,
+      "author": "butter_bridge",
+      "votes": 0,
+      "created_at": "2024-10-15T15:46:36.766Z"
+    }
   }
 }
