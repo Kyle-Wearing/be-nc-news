@@ -4,7 +4,6 @@ const data = require("../db/data/test-data");
 const seed = require("../db/seeds/seed");
 const request = require("supertest");
 const endpointsJSON = require("../endpoints.json");
-require("jest-sorted");
 
 beforeEach(() => seed(data));
 afterAll(() => db.end());
@@ -94,6 +93,48 @@ describe("GET requests", () => {
         .expect(200)
         .then(({ body: { articles } }) => {
           expect(articles).toBeSorted({ key: "created_at", descending: true });
+        });
+    });
+  });
+  describe("/api/articles/:article_id/comments", () => {
+    it("responds 200 - returns an array of comment objects with correct properties for the given article id", () => {
+      return request(app)
+        .get("/api/articles/1/comments")
+        .expect(200)
+        .then(({ body: { comments } }) => {
+          expect(comments.length).toBe(11);
+          comments.forEach((comment) => {
+            expect(comment.article_id).toBe(1);
+            expect(typeof comment.comment_id).toBe("number");
+            expect(typeof comment.votes).toBe("number");
+            expect(typeof comment.created_at).toBe("string");
+            expect(typeof comment.author).toBe("string");
+            expect(typeof comment.body).toBe("string");
+          });
+        });
+    });
+    it("responds 404 - returns error message 'Article does not exist' when given a valid id that does not exist", () => {
+      return request(app)
+        .get("/api/articles/999999/comments")
+        .expect(404)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("Article does not exist");
+        });
+    });
+    it("responds 400 - returns error message 'Invalid id type' when given an invalid id type", () => {
+      return request(app)
+        .get("/api/articles/invalid_id/comments")
+        .expect(400)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("Invalid id type");
+        });
+    });
+    it("responds 200 - returns an empty array if given a valid id that exists but has no comments", () => {
+      return request(app)
+        .get("/api/articles/7/comments")
+        .expect(200)
+        .then(({ body: { comments } }) => {
+          expect(comments).toEqual([]);
         });
     });
   });
