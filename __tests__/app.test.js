@@ -239,7 +239,20 @@ describe("PATCH requests", () => {
 describe("DELETE requests", () => {
   describe("/api/comments/:comment_id", () => {
     it("responds 204 - does not return a body", () => {
-      return request(app).delete("/api/comments/1").expect(204);
+      return request(app)
+        .delete("/api/comments/1")
+        .expect(204)
+        .then(() => {
+          return request(app).get("/api/comments/1").expect(404);
+        });
+    });
+    it("responds 404 - if given comment id is valid type but does not exist", () => {
+      return request(app)
+        .delete("/api/comments/999999")
+        .expect(404)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("Comment does not exist");
+        });
     });
   });
 });
