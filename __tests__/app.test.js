@@ -215,5 +215,14 @@ describe("PATCH requests", () => {
           expect(msg).toBe("Article does not exist");
         });
     });
+    it("responds 400 - returns an error message if the request body doesnt have an inc_votes", () => {
+      return request(app)
+        .patch("/api/articles/1")
+        .send({})
+        .expect(400)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("Invalid request body");
+        });
+    });
   });
 });
