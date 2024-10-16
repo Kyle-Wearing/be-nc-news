@@ -224,5 +224,14 @@ describe("PATCH requests", () => {
           expect(msg).toBe("Invalid request body");
         });
     });
+    it("responds 400 - returns an error message if the article id is an invalid type", () => {
+      return request(app)
+        .patch("/api/articles/invalid_id")
+        .send({ inc_votes: 100 })
+        .expect(400)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("Invalid id type");
+        });
+    });
   });
 });
