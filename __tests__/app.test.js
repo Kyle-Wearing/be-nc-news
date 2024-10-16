@@ -19,6 +19,21 @@ describe("GET requests", () => {
         });
     });
   });
+  describe("/api/users", () => {
+    it("responds 200 - returns an array of user objects with all user properties", () => {
+      return request(app)
+        .get("/api/users")
+        .expect(200)
+        .then(({ body: { users } }) => {
+          expect(users.length).toBe(4);
+          users.forEach((user) => {
+            expect(typeof user.username).toBe("string");
+            expect(typeof user.name).toBe("string");
+            expect(typeof user.avatar_url).toBe("string");
+          });
+        });
+    });
+  });
   describe("/api/topics", () => {
     it("responds 200 - returns an array of topic objects with the properties, slug and description", () => {
       return request(app)
