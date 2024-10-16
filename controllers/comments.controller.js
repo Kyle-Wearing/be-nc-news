@@ -27,7 +27,6 @@ function postCommentByArticleId(req, res, next) {
   ];
   return Promise.all(promises)
     .then((result) => {
-      console.log(result[1]);
       res.status(201).send({ comment: result[1] });
     })
     .catch((err) => {
