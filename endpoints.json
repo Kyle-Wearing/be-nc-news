@@ -88,5 +88,10 @@
         "comment_count": 6
       }
     }
+  },
+  "DELETE /api/comments/:comment_id": {
+    "description": "deletes a comment by its id",
+    "queries": ["comment_id"],
+    "exampleResponse": "only responds with status code 204"
   }
 }
