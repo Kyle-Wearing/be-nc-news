@@ -185,3 +185,53 @@ describe("POST requests", () => {
     });
   });
 });
+
+describe("PATCH requests", () => {
+  describe("/api/articles/:article_id", () => {
+    it("responds 200 - returns the article with the number of votes changed by ammount specified in body", () => {
+      return request(app)
+        .patch("/api/articles/1")
+        .send({ inc_votes: 100 })
+        .expect(200)
+        .then(({ body: { article } }) => {
+          expect(Object.keys(article).length).toBe(8);
+          expect(article.title).toBe("Living in the shadow of a great man");
+          expect(article.topic).toBe("mitch");
+          expect(article.author).toBe("butter_bridge");
+          expect(article.body).toBe("I find this existence challenging");
+          expect(article.created_at).toBe("2020-07-09T20:11:00.000Z");
+          expect(article.votes).toBe(200);
+          expect(article.article_img_url).toBe(
+            "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700"
+          );
+        });
+    });
+    it("reponds 404 - returns an arror message 'Article does not exist' if passed a valid article id type that does not exist", () => {
+      return request(app)
+        .patch("/api/articles/999999")
+        .send({ inc_votes: 100 })
+        .expect(404)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("Article does not exist");
+        });
+    });
+    it("responds 400 - returns an error message if the request body doesnt have an inc_votes", () => {
+      return request(app)
+        .patch("/api/articles/1")
+        .send({})
+        .expect(400)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("Invalid request body");
+        });
+    });
+    it("responds 400 - returns an error message if the article id is an invalid type", () => {
+      return request(app)
+        .patch("/api/articles/invalid_id")
+        .send({ inc_votes: 100 })
+        .expect(400)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("Invalid id type");
+        });
+    });
+  });
+});
