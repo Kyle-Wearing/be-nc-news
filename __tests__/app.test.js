@@ -254,5 +254,13 @@ describe("DELETE requests", () => {
           expect(msg).toBe("Comment does not exist");
         });
     });
+    it("responds 400 - if given an invalid comment id type", () => {
+      return request(app)
+        .delete("/api/comments/invalid_id")
+        .expect(400)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("Invalid id type");
+        });
+    });
   });
 });
