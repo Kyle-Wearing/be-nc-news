@@ -139,3 +139,49 @@ describe("GET requests", () => {
     });
   });
 });
+
+describe("POST requests", () => {
+  describe("/api/articles/:article_id/comments", () => {
+    it("responds 201 - returns a newly posted comment object", () => {
+      return request(app)
+        .post("/api/articles/2/comments")
+        .send({ username: "butter_bridge", body: "new comment" })
+        .expect(201)
+        .then(({ body: { comment } }) => {
+          expect(comment.article_id).toBe(2);
+          expect(comment.body).toBe("new comment");
+          expect(comment.author).toBe("butter_bridge");
+          expect(comment.votes).toBe(0);
+          expect(typeof comment.created_at).toBe("string");
+          expect(typeof comment.comment_id).toBe("number");
+        });
+    });
+    it("responds 400 - returns an error message if the sent request body doesnt have a username, body or article id", () => {
+      return request(app)
+        .post("/api/articles/2/comments")
+        .send({ username: "butter_bridge" })
+        .expect(400)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("Invalid comment contents");
+        });
+    });
+    it("responds 404 - returns an error message if the comment is trying to be posted to an article that does not exist", () => {
+      return request(app)
+        .post("/api/articles/99999/comments")
+        .send({ username: "butter_bridge", body: "new comment" })
+        .expect(404)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("Article does not exist");
+        });
+    });
+    it("responds 400 - returns an error message if the comment is being posted to an invalid id type", () => {
+      return request(app)
+        .post("/api/articles/invalid_id/comments")
+        .send({ username: "butter_bridge", body: "new comment" })
+        .expect(400)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("Invalid id type");
+        });
+    });
+  });
+});
