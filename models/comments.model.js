@@ -37,4 +37,17 @@ function insertCommentByArticleId(id, newComment) {
     });
 }
 
-module.exports = { selectCommentsByArticleId, insertCommentByArticleId };
+function removeCommentById(id) {
+  return db.query(
+    `
+        DELETE FROM comments
+        WHERE comment_id = $1`,
+    [id]
+  );
+}
+
+module.exports = {
+  selectCommentsByArticleId,
+  insertCommentByArticleId,
+  removeCommentById,
+};

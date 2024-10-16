@@ -235,3 +235,11 @@ describe("PATCH requests", () => {
     });
   });
 });
+
+describe("DELETE requests", () => {
+  describe("/api/comments/:comment_id", () => {
+    it("responds 204 - does not return a body", () => {
+      return request(app).delete("/api/comments/1").expect(204);
+    });
+  });
+});
