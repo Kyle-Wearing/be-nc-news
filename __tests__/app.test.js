@@ -206,5 +206,14 @@ describe("PATCH requests", () => {
           );
         });
     });
+    it("reponds 404 - returns an arror message 'Article does not exist' if passed a valid article id type that does not exist", () => {
+      return request(app)
+        .patch("/api/articles/999999")
+        .send({ inc_votes: 100 })
+        .expect(404)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("Article does not exist");
+        });
+    });
   });
 });

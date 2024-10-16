@@ -43,6 +43,9 @@ function updateArticleById(id, { inc_votes }) {
       [inc_votes, id]
     )
     .then(({ rows }) => {
+      if (rows.length === 0) {
+        return Promise.reject({ status: 404, msg: "Article does not exist" });
+      }
       return rows[0];
     });
 }

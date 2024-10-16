@@ -23,9 +23,13 @@ function getArticles(req, res, next) {
 
 function patchArticleById(req, res, next) {
   const { article_id } = req.params;
-  updateArticleById(article_id, req.body).then((article) => {
-    res.status(200).send({ article });
-  });
+  updateArticleById(article_id, req.body)
+    .then((article) => {
+      res.status(200).send({ article });
+    })
+    .catch((err) => {
+      next(err);
+    });
 }
 
 module.exports = { getArticleById, getArticles, patchArticleById };
