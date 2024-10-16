@@ -185,3 +185,26 @@ describe("POST requests", () => {
     });
   });
 });
+
+describe("PATCH requests", () => {
+  describe("/api/articles/:article_id", () => {
+    it("responds 200 - returns the article with the number of votes changed by ammount specified in body", () => {
+      return request(app)
+        .patch("/api/articles/1")
+        .send({ inc_votes: 100 })
+        .expect(200)
+        .then(({ body: { article } }) => {
+          expect(Object.keys(article).length).toBe(8);
+          expect(article.title).toBe("Living in the shadow of a great man");
+          expect(article.topic).toBe("mitch");
+          expect(article.author).toBe("butter_bridge");
+          expect(article.body).toBe("I find this existence challenging");
+          expect(article.created_at).toBe("2020-07-09T20:11:00.000Z");
+          expect(article.votes).toBe(200);
+          expect(article.article_img_url).toBe(
+            "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700"
+          );
+        });
+    });
+  });
+});
