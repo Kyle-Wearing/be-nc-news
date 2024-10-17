@@ -54,7 +54,6 @@ describe("GET requests", () => {
         .get("/api/articles/1")
         .expect(200)
         .then(({ body: { article } }) => {
-          expect(Object.keys(article).length).toBe(8);
           expect(article.title).toBe("Living in the shadow of a great man");
           expect(article.topic).toBe("mitch");
           expect(article.author).toBe("butter_bridge");
@@ -64,6 +63,7 @@ describe("GET requests", () => {
           expect(article.article_img_url).toBe(
             "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700"
           );
+          expect(article.comment_count).toBe(11);
         });
     });
     it("responds 404 - returns an error message if given a valid id that does not exist", () => {
