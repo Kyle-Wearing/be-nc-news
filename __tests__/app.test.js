@@ -158,6 +158,25 @@ describe("GET requests", () => {
           expect(msg).toBe("Invalid queries");
         });
     });
+    it("responds 200 - returns all articles for a specified topic given as a topic query", () => {
+      return request(app)
+        .get("/api/articles?topic=mitch")
+        .expect(200)
+        .then(({ body: { articles } }) => {
+          expect(articles.length).toBe(12);
+          articles.forEach((article) => {
+            expect(article.topic).toBe("mitch");
+          });
+        });
+    });
+    it("responds 200 - returns an empty array if the queired topic exists but has no articles ", () => {
+      return request(app)
+        .get("/api/articles?topic=paper")
+        .expect(200)
+        .then(({ body: { articles } }) => {
+          expect(articles.length).toBe(0);
+        });
+    });
   });
   describe("/api/articles/:article_id/comments", () => {
     it("responds 200 - returns an array of comment objects with correct properties for the given article id", () => {
