@@ -110,6 +110,22 @@ describe("GET requests", () => {
           expect(articles).toBeSorted({ key: "created_at", descending: true });
         });
     });
+    it("should order the articles by article id if given a sort by query of article_id", () => {
+      return request(app)
+        .get("/api/articles?sort_by=article_id")
+        .expect(200)
+        .then(({ body: { articles } }) => {
+          expect(articles).toBeSorted({ key: "article_id", descending: true });
+        });
+    });
+    it("should order the articles by votes if given a sort by query of votes", () => {
+      return request(app)
+        .get("/api/articles?sort_by=votes")
+        .expect(200)
+        .then(({ body: { articles } }) => {
+          expect(articles).toBeSorted({ key: "votes", descending: true });
+        });
+    });
   });
   describe("/api/articles/:article_id/comments", () => {
     it("responds 200 - returns an array of comment objects with correct properties for the given article id", () => {
