@@ -171,10 +171,19 @@ describe("POST requests", () => {
           expect(typeof comment.comment_id).toBe("number");
         });
     });
-    it("responds 400 - returns an error message if the sent request body doesnt have a username, body or article id", () => {
+    it("responds 400 - returns an error message if the sent request body doesnt have a body ", () => {
       return request(app)
         .post("/api/articles/2/comments")
         .send({ username: "butter_bridge" })
+        .expect(400)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("Invalid comment contents");
+        });
+    });
+    it("responds 400 - returns an error message if the sent request body doesnt have a username ", () => {
+      return request(app)
+        .post("/api/articles/2/comments")
+        .send({ body: "New comment" })
         .expect(400)
         .then(({ body: { msg } }) => {
           expect(msg).toBe("Invalid comment contents");
@@ -196,6 +205,15 @@ describe("POST requests", () => {
         .expect(400)
         .then(({ body: { msg } }) => {
           expect(msg).toBe("Invalid id type");
+        });
+    });
+    it("responds 404 - returns an error message if the username in the comment is for a user that does not exist", () => {
+      return request(app)
+        .post("/api/articles/2/comments")
+        .send({ username: "non-existant_user", body: "new comment" })
+        .expect(404)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("User does not exist");
         });
     });
   });
