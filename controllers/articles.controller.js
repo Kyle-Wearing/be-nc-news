@@ -16,9 +16,14 @@ function getArticleById(req, res, next) {
 }
 
 function getArticles(req, res, next) {
-  selectArticles().then((articles) => {
-    res.status(200).send({ articles });
-  });
+  const { sort_by, order } = req.query;
+  selectArticles(sort_by, order)
+    .then((articles) => {
+      res.status(200).send({ articles });
+    })
+    .catch((err) => {
+      next(err);
+    });
 }
 
 function patchArticleById(req, res, next) {

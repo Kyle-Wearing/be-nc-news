@@ -16,20 +16,30 @@ function selectArticleById(id) {
     });
 }
 
-function selectArticles() {
-  return db
-    .query(
-      `
-        SELECT articles.article_id, articles.author, articles.title, articles.topic, articles.created_at, articles.votes, articles.article_img_url, CAST(COUNT(comments.comment_id) AS INTEGER) AS comment_count
-        FROM articles
-        LEFT JOIN comments
-        ON comments.article_id = articles.article_id
-        GROUP BY articles.article_id
-        ORDER BY articles.created_at DESC;`
-    )
-    .then(({ rows }) => {
-      return rows;
-    });
+function selectArticles(sort_by = "created_at", order = "desc") {
+  let queryStr = `
+    SELECT articles.article_id, articles.author, articles.title, articles.topic, articles.created_at, articles.votes, articles.article_img_url, CAST(COUNT(comments.comment_id) AS INTEGER) AS comment_count
+    FROM articles
+    LEFT JOIN comments
+    ON comments.article_id = articles.article_id
+    GROUP BY articles.article_id`;
+
+  const validSortBy = ["article_id", "votes", "title", "created_at", "author"];
+  const validOrder = ["desc", "asc"];
+
+  if (!validSortBy.includes(sort_by) || !validOrder.includes(order)) {
+    return Promise.reject({ status: 400, msg: "Invalid queries" });
+  }
+  if (sort_by) {
+    queryStr += ` ORDER BY ${sort_by}`;
+  }
+  if (order) {
+    queryStr += ` ${order}`;
+  }
+
+  return db.query(queryStr).then(({ rows }) => {
+    return rows;
+  });
 }
 
 function updateArticleById(id, { inc_votes }) {
