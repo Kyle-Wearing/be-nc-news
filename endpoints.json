@@ -26,7 +26,8 @@
     "description": "serves an array of all articles",
     "queries": {
       "sort_by": ["article_id", "votes", "title", "created_at", "author"],
-      "order": ["asc", "desc"]
+      "order": ["asc", "desc"],
+      "topic": "gets articles of a specified topic"
     },
     "exampleResponse": {
       "articles": [
