@@ -24,6 +24,12 @@ function selectArticles(sort_by = "created_at", order = "desc") {
     ON comments.article_id = articles.article_id
     GROUP BY articles.article_id`;
 
+  const validSortBy = ["article_id", "votes", "title", "created_at", "author"];
+  const validOrder = ["desc", "asc"];
+
+  if (!validSortBy.includes(sort_by) || !validOrder.includes(order)) {
+    return Promise.reject({ status: 400, msg: "Invalid queries" });
+  }
   if (sort_by) {
     queryStr += ` ORDER BY ${sort_by}`;
   }

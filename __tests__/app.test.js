@@ -142,6 +142,22 @@ describe("GET requests", () => {
           expect(articles).toBeSorted({ key: "article_id", descending: true });
         });
     });
+    it("responds 400 - returns an error message 'invalid queries' if given a query that isnt greenlisted", () => {
+      return request(app)
+        .get("/api/articles?sort_by=invalid_query")
+        .expect(400)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("Invalid queries");
+        });
+    });
+    it("responds 400 - returns an error message 'invalid queries' if given a query that isnt greenlisted", () => {
+      return request(app)
+        .get("/api/articles?sort_by=votes&order=invalid_order")
+        .expect(400)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("Invalid queries");
+        });
+    });
   });
   describe("/api/articles/:article_id/comments", () => {
     it("responds 200 - returns an array of comment objects with correct properties for the given article id", () => {
