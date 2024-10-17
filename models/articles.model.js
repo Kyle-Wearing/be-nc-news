@@ -16,7 +16,7 @@ function selectArticleById(id) {
     });
 }
 
-function selectArticles(sort_by = "created_at") {
+function selectArticles(sort_by = "created_at", order = "desc") {
   let queryStr = `
     SELECT articles.article_id, articles.author, articles.title, articles.topic, articles.created_at, articles.votes, articles.article_img_url, CAST(COUNT(comments.comment_id) AS INTEGER) AS comment_count
     FROM articles
@@ -25,7 +25,10 @@ function selectArticles(sort_by = "created_at") {
     GROUP BY articles.article_id`;
 
   if (sort_by) {
-    queryStr += ` ORDER BY ${sort_by} DESC`;
+    queryStr += ` ORDER BY ${sort_by}`;
+  }
+  if (order) {
+    queryStr += ` ${order}`;
   }
 
   return db.query(queryStr).then(({ rows }) => {

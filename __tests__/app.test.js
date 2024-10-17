@@ -102,7 +102,7 @@ describe("GET requests", () => {
           });
         });
     });
-    it("should order the articles by date in descending order", () => {
+    it("should order the articles by date in descending order by default", () => {
       return request(app)
         .get("/api/articles")
         .expect(200)
@@ -124,6 +124,22 @@ describe("GET requests", () => {
         .expect(200)
         .then(({ body: { articles } }) => {
           expect(articles).toBeSorted({ key: "votes", descending: true });
+        });
+    });
+    it("should sort in ascending order if given order query asc", () => {
+      return request(app)
+        .get("/api/articles?sort_by=article_id&order=asc")
+        .expect(200)
+        .then(({ body: { articles } }) => {
+          expect(articles).toBeSorted({ key: "article_id", descending: false });
+        });
+    });
+    it("should sort in descending order if given order query desc", () => {
+      return request(app)
+        .get("/api/articles?sort_by=article_id&order=desc")
+        .expect(200)
+        .then(({ body: { articles } }) => {
+          expect(articles).toBeSorted({ key: "article_id", descending: true });
         });
     });
   });
