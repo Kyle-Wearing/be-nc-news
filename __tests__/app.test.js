@@ -207,6 +207,15 @@ describe("POST requests", () => {
           expect(msg).toBe("Invalid id type");
         });
     });
+    it("responds 404 - returns an error message if the username in the comment is for a user that does not exist", () => {
+      return request(app)
+        .post("/api/articles/2/comments")
+        .send({ username: "non-existant_user", body: "new comment" })
+        .expect(404)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("User does not exist");
+        });
+    });
   });
 });
 
