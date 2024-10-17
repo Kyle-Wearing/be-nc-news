@@ -16,13 +16,14 @@ function selectArticleById(id) {
     });
 }
 
-function selectArticles(sort_by = "created_at", order = "desc") {
+function selectArticles(sort_by = "created_at", order = "desc", topic) {
   let queryStr = `
     SELECT articles.article_id, articles.author, articles.title, articles.topic, articles.created_at, articles.votes, articles.article_img_url, CAST(COUNT(comments.comment_id) AS INTEGER) AS comment_count
     FROM articles
     LEFT JOIN comments
     ON comments.article_id = articles.article_id
-    GROUP BY articles.article_id`;
+    GROUP BY articles.article_id
+    `;
 
   const validSortBy = ["article_id", "votes", "title", "created_at", "author"];
   const validOrder = ["desc", "asc"];
@@ -38,6 +39,11 @@ function selectArticles(sort_by = "created_at", order = "desc") {
   }
 
   return db.query(queryStr).then(({ rows }) => {
+    if (topic) {
+      return rows.filter((row) => {
+        return row.topic === topic;
+      });
+    }
     return rows;
   });
 }
