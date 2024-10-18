@@ -3,6 +3,7 @@ const {
   selectArticles,
   updateArticleById,
 } = require("../models/articles.model");
+const { selectTopics } = require("../models/topics.model");
 
 function getArticleById(req, res, next) {
   const { article_id } = req.params;
@@ -17,9 +18,18 @@ function getArticleById(req, res, next) {
 
 function getArticles(req, res, next) {
   const { sort_by, order, topic } = req.query;
-  selectArticles(sort_by, order, topic)
-    .then((articles) => {
-      res.status(200).send({ articles });
+  selectTopics()
+    .then((topics) => {
+      const validTopics = topics.map((topicObj) => {
+        return topicObj.slug;
+      });
+      selectArticles(sort_by, order, topic, validTopics)
+        .then((articles) => {
+          res.status(200).send({ articles });
+        })
+        .catch((err) => {
+          next(err);
+        });
     })
     .catch((err) => {
       next(err);
