@@ -364,6 +364,18 @@ describe("PATCH requests", () => {
         });
     });
   });
+  describe("/api/comments/:comment_id", () => {
+    it("responds 200 - returns the comment with the number of votes changed by ammount specified in body", () => {
+      return request(app)
+        .patch("/api/comments/1")
+        .send({ inc_votes: 100 })
+        .expect(200)
+        .then(({ body: { comment } }) => {
+          expect(comment.votes).toBe(116);
+          expect(comment.comment_id).toBe(1);
+        });
+    });
+  });
 });
 
 describe("DELETE requests", () => {
