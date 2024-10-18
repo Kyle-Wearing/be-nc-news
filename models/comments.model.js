@@ -54,6 +54,9 @@ function removeCommentById(id) {
 }
 
 function updateCommentById(id, { inc_votes }) {
+  if (inc_votes && typeof inc_votes !== "number") {
+    return Promise.reject({ status: 400, msg: "Invalid inc_votes type" });
+  }
   return db
     .query(
       `
@@ -64,6 +67,9 @@ function updateCommentById(id, { inc_votes }) {
       [inc_votes, id]
     )
     .then(({ rows }) => {
+      if (rows.length === 0) {
+        return Promise.reject({ status: 404, msg: "Comment does not exist" });
+      }
       return rows[0];
     });
 }

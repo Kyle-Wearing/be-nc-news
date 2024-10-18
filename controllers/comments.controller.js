@@ -49,9 +49,13 @@ function deleteCommentById(req, res, next) {
 
 function patchCommentById(req, res, next) {
   const { comment_id } = req.params;
-  updateCommentById(comment_id, req.body).then((comment) => {
-    res.status(200).send({ comment });
-  });
+  updateCommentById(comment_id, req.body)
+    .then((comment) => {
+      res.status(200).send({ comment });
+    })
+    .catch((err) => {
+      next(err);
+    });
 }
 
 module.exports = {
