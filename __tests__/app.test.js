@@ -177,6 +177,14 @@ describe("GET requests", () => {
           expect(articles.length).toBe(0);
         });
     });
+    it("responds 404 - returns an error message if the queired topic does not exist", () => {
+      return request(app)
+        .get("/api/articles?topic=invalid_topic")
+        .expect(404)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("Topic does not exist");
+        });
+    });
   });
   describe("/api/articles/:article_id/comments", () => {
     it("responds 200 - returns an array of comment objects with correct properties for the given article id", () => {
