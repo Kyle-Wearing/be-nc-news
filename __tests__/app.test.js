@@ -364,6 +364,54 @@ describe("PATCH requests", () => {
         });
     });
   });
+  describe("/api/comments/:comment_id", () => {
+    it("responds 200 - returns the comment with the number of votes changed by ammount specified in body", () => {
+      return request(app)
+        .patch("/api/comments/1")
+        .send({ inc_votes: 100 })
+        .expect(200)
+        .then(({ body: { comment } }) => {
+          expect(comment.votes).toBe(116);
+          expect(comment.comment_id).toBe(1);
+        });
+    });
+    it("responds 404 - returns an error message 'comment does not exist' when given a valid comment id that doesnt exist", () => {
+      return request(app)
+        .patch("/api/comments/99999")
+        .send({ inc_votes: 100 })
+        .expect(404)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("Comment does not exist");
+        });
+    });
+    it("responds 400 - returns an error message 'invalid id type' when given a invalid comment id type", () => {
+      return request(app)
+        .patch("/api/comments/invalid_id")
+        .send({ inc_votes: 100 })
+        .expect(400)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("Invalid id type");
+        });
+    });
+    it("responds 400 - returns an error message 'invalid request body' if request body does not include inc_votes", () => {
+      return request(app)
+        .patch("/api/comments/1")
+        .send({})
+        .expect(400)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("Invalid request body");
+        });
+    });
+    it("responds 400 - returns an error message 'invalid inc_votes type' if request body includes inc_votes as an invalid data type", () => {
+      return request(app)
+        .patch("/api/comments/1")
+        .send({ inc_votes: "invalid_data_type" })
+        .expect(400)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("Invalid inc_votes type");
+        });
+    });
+  });
 });
 
 describe("DELETE requests", () => {
