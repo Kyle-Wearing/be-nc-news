@@ -34,6 +34,28 @@ describe("GET requests", () => {
         });
     });
   });
+  describe("/api.users/:username", () => {
+    it("responds 200 - returns the user object that matches the request username", () => {
+      return request(app)
+        .get("/api/users/icellusedkars")
+        .expect(200)
+        .then(({ body: { user } }) => {
+          expect(user.username).toBe("icellusedkars");
+          expect(user.name).toBe("sam");
+          expect(user.avatar_url).toBe(
+            "https://avatars2.githubusercontent.com/u/24604688?s=460&v=4"
+          );
+        });
+    });
+    it("responds 404 - returns an error message user does not exist if given a username that doesnt exist", () => {
+      return request(app)
+        .get("/api/users/non-existant-user")
+        .expect(404)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("User does not exist");
+        });
+    });
+  });
   describe("/api/topics", () => {
     it("responds 200 - returns an array of topic objects with the properties, slug and description", () => {
       return request(app)
