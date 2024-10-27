@@ -2,6 +2,7 @@ const {
   selectArticleById,
   selectArticles,
   updateArticleById,
+  insertArticle,
 } = require("../models/articles.model");
 const { selectTopics } = require("../models/topics.model");
 
@@ -47,4 +48,10 @@ function patchArticleById(req, res, next) {
     });
 }
 
-module.exports = { getArticleById, getArticles, patchArticleById };
+function postArticle(req, res, next) {
+  insertArticle(req.body).then((article) => {
+    res.status(201).send({ article });
+  });
+}
+
+module.exports = { getArticleById, getArticles, patchArticleById, postArticle };

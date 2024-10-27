@@ -314,6 +314,34 @@ describe("POST requests", () => {
         });
     });
   });
+  describe("/api/articles", () => {
+    it("responds 201 - returns an newly created article object with all article properties ", () => {
+      return request(app)
+        .post("/api/articles")
+        .send({
+          author: "butter_bridge",
+          title: "new title",
+          body: "new body",
+          topic: "cats",
+          article_img_url:
+            "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+        })
+        .expect(201)
+        .then(({ body: { article } }) => {
+          expect(article.author).toBe("butter_bridge");
+          expect(article.title).toBe("new title");
+          expect(article.body).toBe("new body");
+          expect(article.topic).toBe("cats");
+          expect(article.article_img_url).toBe(
+            "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700"
+          );
+          expect(typeof article.article_id).toBe("number");
+          expect(typeof article.created_at).toBe("string");
+          expect(article.votes).toBe(0);
+          expect(article.comment_count).toBe(0);
+        });
+    });
+  });
 });
 
 describe("PATCH requests", () => {
