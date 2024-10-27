@@ -80,8 +80,11 @@ function updateArticleById(id, { inc_votes }) {
     });
 }
 
-function insertArticle(newArticle) {
+function insertArticle(newArticle, validTopics) {
   const { author, title, body, topic, article_img_url } = newArticle;
+  if (!validTopics.includes(topic) && topic !== undefined) {
+    return Promise.reject({ status: 404, msg: "Topic does not exist" });
+  }
   const values = [author, title, body, topic];
   let queryStr = `INSERT INTO articles
   (author, title, body, topic`;

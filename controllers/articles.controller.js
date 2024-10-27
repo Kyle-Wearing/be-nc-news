@@ -39,6 +39,7 @@ function getArticles(req, res, next) {
 
 function patchArticleById(req, res, next) {
   const { article_id } = req.params;
+
   updateArticleById(article_id, req.body)
     .then((article) => {
       res.status(200).send({ article });
@@ -49,9 +50,22 @@ function patchArticleById(req, res, next) {
 }
 
 function postArticle(req, res, next) {
-  insertArticle(req.body).then((article) => {
-    res.status(201).send({ article });
-  });
+  selectTopics()
+    .then((topics) => {
+      const validTopics = topics.map((topicObj) => {
+        return topicObj.slug;
+      });
+      insertArticle(req.body, validTopics)
+        .then((article) => {
+          res.status(201).send({ article });
+        })
+        .catch((err) => {
+          next(err);
+        });
+    })
+    .catch((err) => {
+      next(err);
+    });
 }
 
 module.exports = { getArticleById, getArticles, patchArticleById, postArticle };
