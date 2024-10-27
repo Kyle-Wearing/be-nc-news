@@ -5,8 +5,8 @@ const {
 
 const usersRouter = require("express").Router();
 
-usersRouter.get("/", getUsers);
+usersRouter.route("/").get(getUsers);
 
-usersRouter.get("/:username", getUserByUsername);
+usersRouter.route("/:username").get(getUserByUsername);
 
 module.exports = usersRouter;

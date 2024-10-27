@@ -11,16 +11,16 @@ const {
 
 const articlesRouter = require("express").Router();
 
-articlesRouter.get("/", getArticles);
+articlesRouter.route("/").get(getArticles).post(postArticle);
 
-articlesRouter.get("/:article_id", getArticleById);
+articlesRouter
+  .route("/:article_id")
+  .get(getArticleById)
+  .patch(patchArticleById);
 
-articlesRouter.get("/:article_id/comments", getCommentsByArticleId);
-
-articlesRouter.post("/:article_id/comments", postCommentByArticleId);
-
-articlesRouter.patch("/:article_id", patchArticleById);
-
-articlesRouter.post("/", postArticle);
+articlesRouter
+  .route("/:article_id/comments")
+  .get(getCommentsByArticleId)
+  .post(postCommentByArticleId);
 
 module.exports = articlesRouter;
