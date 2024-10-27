@@ -16,6 +16,9 @@ function sqlErrors(err, req, res, next) {
   if (err.code === "23503") {
     res.status(404).send({ msg: "User does not exist" });
   }
+  if (err.code === "23505") {
+    res.status(400).send({ msg: "Already exists" });
+  }
 }
 
 module.exports = { customErrors, sqlErrors };

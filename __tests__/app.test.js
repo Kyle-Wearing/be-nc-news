@@ -559,6 +559,15 @@ describe("POST requests", () => {
           expect(msg).toBe("Invalid request body");
         });
     });
+    it("responds 400 - returns an error message if topic being created already exists", () => {
+      return request(app)
+        .post("/api/topics")
+        .send({ slug: "cats", description: "description of new topic" })
+        .expect(400)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("Already exists");
+        });
+    });
   });
 });
 

@@ -13,7 +13,6 @@ function selectTopics() {
 
 function insertTopic(newTopic) {
   const { slug, description } = newTopic;
-  console.log(newTopic);
   return db
     .query(
       `
