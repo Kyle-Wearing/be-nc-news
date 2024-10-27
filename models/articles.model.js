@@ -25,7 +25,7 @@ function selectArticles(
   topic,
   validTopics,
   limit = 10,
-  p = 0
+  p = 1
 ) {
   let queryStr = `
     SELECT articles.article_id, articles.author, articles.title, articles.topic, articles.created_at, articles.votes, articles.article_img_url, CAST(COUNT(comments.comment_id) AS INTEGER) AS comment_count
@@ -58,7 +58,8 @@ function selectArticles(
   if (order) {
     queryStr += ` ${order}`;
   }
-  queryArray.unshift(p);
+  const offset = (p - 1) * limit;
+  queryArray.unshift(offset);
   queryArray.unshift(limit);
   queryStr += ` LIMIT $1 OFFSET $2`;
 
