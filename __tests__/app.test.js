@@ -34,7 +34,7 @@ describe("GET requests", () => {
         });
     });
   });
-  describe("/api.users/:username", () => {
+  describe("/api/users/:username", () => {
     it("responds 200 - returns the user object that matches the request username", () => {
       return request(app)
         .get("/api/users/icellusedkars")
@@ -536,6 +536,36 @@ describe("POST requests", () => {
         .expect(404)
         .then(({ body: { msg } }) => {
           expect(msg).toBe("User does not exist");
+        });
+    });
+  });
+  describe("/api/topics", () => {
+    it("responds 201 - returns a newly created topic object with correct properties", () => {
+      return request(app)
+        .post("/api/topics")
+        .send({ slug: "new topic", description: "description of new topic" })
+        .expect(201)
+        .then(({ body: { topic } }) => {
+          expect(topic.slug).toBe("new topic");
+          expect(topic.description).toBe("description of new topic");
+        });
+    });
+    it("responds 400 - returns an error message if request body is missing slug", () => {
+      return request(app)
+        .post("/api/topics")
+        .send({ description: "description of new topic" })
+        .expect(400)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("Invalid request body");
+        });
+    });
+    it("responds 400 - returns an error message if topic being created already exists", () => {
+      return request(app)
+        .post("/api/topics")
+        .send({ slug: "cats", description: "description of new topic" })
+        .expect(400)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("Already exists");
         });
     });
   });
