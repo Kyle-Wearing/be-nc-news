@@ -3,6 +3,7 @@ const {
   selectArticles,
   updateArticleById,
   insertArticle,
+  removeArticleById,
 } = require("../models/articles.model");
 const { selectTopics } = require("../models/topics.model");
 
@@ -68,4 +69,21 @@ function postArticle(req, res, next) {
     });
 }
 
-module.exports = { getArticleById, getArticles, patchArticleById, postArticle };
+function deleteArticleById(req, res, next) {
+  const { article_id } = req.params;
+  removeArticleById(article_id)
+    .then(() => {
+      res.status(204).send({});
+    })
+    .catch((err) => {
+      next(err);
+    });
+}
+
+module.exports = {
+  getArticleById,
+  getArticles,
+  patchArticleById,
+  postArticle,
+  deleteArticleById,
+};

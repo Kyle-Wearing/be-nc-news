@@ -696,4 +696,35 @@ describe("DELETE requests", () => {
         });
     });
   });
+  describe("/api/article/:article_id", () => {
+    it("responds 204 - does not send anything back", () => {
+      return request(app)
+        .delete("/api/articles/2")
+        .expect(204)
+        .then(() => {
+          return request(app)
+            .get("/api/articles/2")
+            .expect(404)
+            .then(({ body: { msg } }) => {
+              expect(msg).toBe("Article does not exist");
+            });
+        });
+    });
+    it("responds 404 - returns an error message if the article id is a valid type but does not exist", () => {
+      return request(app)
+        .delete("/api/articles/9999")
+        .expect(404)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("Article does not exist");
+        });
+    });
+    it("responds 400 - returns an error message if the article id is an invalid type", () => {
+      return request(app)
+        .delete("/api/articles/invalid_id")
+        .expect(400)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("Invalid id type");
+        });
+    });
+  });
 });
