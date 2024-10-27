@@ -34,7 +34,7 @@ describe("GET requests", () => {
         });
     });
   });
-  describe("/api.users/:username", () => {
+  describe("/api/users/:username", () => {
     it("responds 200 - returns the user object that matches the request username", () => {
       return request(app)
         .get("/api/users/icellusedkars")
