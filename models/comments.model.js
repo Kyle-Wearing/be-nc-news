@@ -1,11 +1,13 @@
 const db = require("../db/connection");
 
-function selectCommentsByArticleId(id) {
+function selectCommentsByArticleId(id, limit = 10, p = 1) {
+  const offset = (p - 1) * limit;
   return db
     .query(
       `SELECT * FROM comments
-    WHERE article_id = $1;`,
-      [id]
+    WHERE article_id = $1
+    LIMIT $2 OFFSET $3;`,
+      [id, limit, offset]
     )
     .then(({ rows }) => {
       return rows;
