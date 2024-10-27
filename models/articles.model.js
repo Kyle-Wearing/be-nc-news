@@ -23,7 +23,9 @@ function selectArticles(
   sort_by = "created_at",
   order = "desc",
   topic,
-  validTopics
+  validTopics,
+  limit = 10,
+  p = 0
 ) {
   let queryStr = `
     SELECT articles.article_id, articles.author, articles.title, articles.topic, articles.created_at, articles.votes, articles.article_img_url, CAST(COUNT(comments.comment_id) AS INTEGER) AS comment_count
@@ -44,7 +46,7 @@ function selectArticles(
 
   const queryArray = [];
   if (topic) {
-    queryStr += ` WHERE articles.topic = $1`;
+    queryStr += ` WHERE articles.topic = $3`;
     queryArray.push(topic);
   }
 
@@ -56,6 +58,9 @@ function selectArticles(
   if (order) {
     queryStr += ` ${order}`;
   }
+  queryArray.unshift(p);
+  queryArray.unshift(limit);
+  queryStr += ` LIMIT $1 OFFSET $2`;
 
   return db.query(queryStr, queryArray).then(({ rows }) => {
     return rows;
