@@ -431,7 +431,7 @@ describe("POST requests", () => {
           expect(msg).toBe("Topic does not exist");
         });
     });
-    it("responds 404 - if the given topic does not exist", () => {
+    it("responds 404 - if the given user does not exist", () => {
       return request(app)
         .post("/api/articles")
         .send({
