@@ -539,6 +539,27 @@ describe("POST requests", () => {
         });
     });
   });
+  describe("/api/topics", () => {
+    it("responds 201 - returns a newly created topic object with correct properties", () => {
+      return request(app)
+        .post("/api/topics")
+        .send({ slug: "new topic", description: "description of new topic" })
+        .expect(201)
+        .then(({ body: { topic } }) => {
+          expect(topic.slug).toBe("new topic");
+          expect(topic.description).toBe("description of new topic");
+        });
+    });
+    it("responds 400 - returns an error message if request body is missing slug", () => {
+      return request(app)
+        .post("/api/topics")
+        .send({ description: "description of new topic" })
+        .expect(400)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("Invalid request body");
+        });
+    });
+  });
 });
 
 describe("PATCH requests", () => {
