@@ -73,7 +73,13 @@
   },
   "GET /api/articles/:article_id/comments": {
     "description": "gets an array of comment objects for a given article",
-    "queries": ["article_id"],
+    "queries": [
+      "article_id",
+      {
+        "limit": "limits number of responses per page, defaults to 10",
+        "p": "offset, which page to start responses from, defaults to no offset page 1"
+      }
+    ],
     "exampleResponse": [
       {
         "body": "The beautiful thing about treasure is that it exists. Got to find out what kind of sheets these are; not cotton, not rayon, silky.",
