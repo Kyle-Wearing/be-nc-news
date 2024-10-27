@@ -8,8 +8,9 @@ const {
 
 function getCommentsByArticleId(req, res, next) {
   const { article_id } = req.params;
+  const { limit, p } = req.query;
   const promises = [
-    selectCommentsByArticleId(article_id),
+    selectCommentsByArticleId(article_id, limit, p),
     selectArticleById(article_id),
   ];
   return Promise.all(promises)

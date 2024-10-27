@@ -253,12 +253,12 @@ describe("GET requests", () => {
     });
   });
   describe("/api/articles/:article_id/comments", () => {
-    it("responds 200 - returns an array of comment objects with correct properties for the given article id", () => {
+    it("responds 200 - returns an array of comment objects with correct properties for the given article id, defaults to 10 comments per page", () => {
       return request(app)
         .get("/api/articles/1/comments")
         .expect(200)
         .then(({ body: { comments } }) => {
-          expect(comments.length).toBe(11);
+          expect(comments.length).toBe(10);
           comments.forEach((comment) => {
             expect(comment.article_id).toBe(1);
             expect(typeof comment.comment_id).toBe("number");
@@ -291,6 +291,55 @@ describe("GET requests", () => {
         .expect(200)
         .then(({ body: { comments } }) => {
           expect(comments).toEqual([]);
+        });
+    });
+    it("responds 200 - returns an array of comment objects, and only returns given ammount of comments specified via query", () => {
+      return request(app)
+        .get("/api/articles/1/comments?limit=5")
+        .expect(200)
+        .then(({ body: { comments } }) => {
+          expect(comments.length).toBe(5);
+          comments.forEach((comment) => {
+            expect(comment.article_id).toBe(1);
+            expect(typeof comment.comment_id).toBe("number");
+            expect(typeof comment.votes).toBe("number");
+            expect(typeof comment.created_at).toBe("string");
+            expect(typeof comment.author).toBe("string");
+            expect(typeof comment.body).toBe("string");
+          });
+        });
+    });
+    it("responds 400 - returns an error message if given an invalid limit type", () => {
+      return request(app)
+        .get("/api/articles/1/comments?limit=invalid")
+        .expect(400)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("Invalid id type");
+        });
+    });
+    it("responds 200 - returns an array of comment objects, and only returns given ammount of comments specified via query starting at a given page via query", () => {
+      return request(app)
+        .get("/api/articles/1/comments?limit=2&p=3")
+        .expect(200)
+        .then(({ body: { comments } }) => {
+          expect(comments[0].comment_id).toBe(6);
+          expect(comments.length).toBe(2);
+          comments.forEach((comment) => {
+            expect(comment.article_id).toBe(1);
+            expect(typeof comment.comment_id).toBe("number");
+            expect(typeof comment.votes).toBe("number");
+            expect(typeof comment.created_at).toBe("string");
+            expect(typeof comment.author).toBe("string");
+            expect(typeof comment.body).toBe("string");
+          });
+        });
+    });
+    it("responds 400 - returns an error message if given page query is invalid type", () => {
+      return request(app)
+        .get("/api/articles/1/comments?limit=5&p=invalid")
+        .expect(400)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("Invalid id type");
         });
     });
   });
