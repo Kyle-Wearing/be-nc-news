@@ -127,6 +127,14 @@
       "comment_count": 0
     }
   },
+  "POST /api/topics": {
+    "description": "posts a new topic",
+    "queries": [],
+    "exampleResponse": {
+      "slug": "new topic",
+      "description": "description of topic"
+    }
+  },
   "PATCH /api/articles/:article_id": {
     "description": "updates an articles votes",
     "queries": ["inc_votes"],
