@@ -18,13 +18,13 @@ function getArticleById(req, res, next) {
 }
 
 function getArticles(req, res, next) {
-  const { sort_by, order, topic } = req.query;
+  const { sort_by, order, topic, limit, p } = req.query;
   selectTopics()
     .then((topics) => {
       const validTopics = topics.map((topicObj) => {
         return topicObj.slug;
       });
-      selectArticles(sort_by, order, topic, validTopics)
+      selectArticles(sort_by, order, topic, validTopics, limit, p)
         .then((articles) => {
           res.status(200).send({ articles });
         })

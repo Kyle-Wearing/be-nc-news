@@ -106,12 +106,12 @@ describe("GET requests", () => {
     });
   });
   describe("/api/articles", () => {
-    it("responds 200 - returns an array of article objects with all article properties", () => {
+    it("responds 200 - returns an array of article objects with all article properties defaults to 10 articles long", () => {
       return request(app)
         .get("/api/articles")
         .expect(200)
         .then(({ body: { articles } }) => {
-          expect(articles.length).toBe(13);
+          expect(articles.length).toBe(10);
           articles.forEach((article) => {
             expect(typeof article.author).toBe("string");
             expect(typeof article.title).toBe("string");
@@ -185,7 +185,7 @@ describe("GET requests", () => {
         .get("/api/articles?topic=mitch")
         .expect(200)
         .then(({ body: { articles } }) => {
-          expect(articles.length).toBe(12);
+          expect(articles.length).toBe(10);
           articles.forEach((article) => {
             expect(article.topic).toBe("mitch");
           });
@@ -205,6 +205,50 @@ describe("GET requests", () => {
         .expect(404)
         .then(({ body: { msg } }) => {
           expect(msg).toBe("Topic does not exist");
+        });
+    });
+    it("responds 200 - returns an array of article of a given length via a limit query", () => {
+      return request(app)
+        .get("/api/articles?limit=5")
+        .expect(200)
+        .then(({ body: { articles } }) => {
+          expect(articles.length).toBe(5);
+          articles.forEach((article) => {
+            expect(typeof article.author).toBe("string");
+            expect(typeof article.title).toBe("string");
+            expect(typeof article.article_id).toBe("number");
+            expect(typeof article.topic).toBe("string");
+            expect(typeof article.created_at).toBe("string");
+            expect(typeof article.votes).toBe("number");
+            expect(typeof article.article_img_url).toBe("string");
+            expect(typeof article.comment_count).toBe("number");
+          });
+        });
+    });
+    it("responds 400 - returns an error message if given an invalid limit query", () => {
+      return request(app)
+        .get("/api/articles?limit=invalid")
+        .expect(400)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("Invalid id type");
+        });
+    });
+    it("responds 200 - returns an array of articles starting from a given page", () => {
+      return request(app)
+        .get("/api/articles?sort_by=article_id&order=asc&limit=2&p=4")
+        .expect(200)
+        .then(({ body: { articles } }) => {
+          expect(articles[0].article_id).toBe(7);
+          articles.forEach((article) => {
+            expect(typeof article.author).toBe("string");
+            expect(typeof article.title).toBe("string");
+            expect(typeof article.article_id).toBe("number");
+            expect(typeof article.topic).toBe("string");
+            expect(typeof article.created_at).toBe("string");
+            expect(typeof article.votes).toBe("number");
+            expect(typeof article.article_img_url).toBe("string");
+            expect(typeof article.comment_count).toBe("number");
+          });
         });
     });
   });

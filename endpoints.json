@@ -38,7 +38,9 @@
     "queries": {
       "sort_by": ["article_id", "votes", "title", "created_at", "author"],
       "order": ["asc", "desc"],
-      "topic": "gets articles of a specified topic"
+      "topic": "gets articles of a specified topic",
+      "limit": "limits how many responses are recived, default it 10",
+      "p": "what 'page' is returned based on the offset"
     },
     "exampleResponse": {
       "articles": [
