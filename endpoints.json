@@ -155,6 +155,11 @@
     "queries": ["comment_id"],
     "exampleResponse": "only responds with status code 204"
   },
+  "DELETE /api/articles/:article_id": {
+    "description": "deletes an article by id",
+    "queries": ["article_id"],
+    "exampleResponse": "only respond with a status code 204"
+  },
   "PATCH /api/comments/:comment_id": {
     "description": "updates a comments votes by given ammount",
     "queries": ["inc_votes"],
