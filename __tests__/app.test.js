@@ -314,6 +314,138 @@ describe("POST requests", () => {
         });
     });
   });
+  describe("/api/articles", () => {
+    it("responds 201 - returns a newly created article object with all article properties ", () => {
+      return request(app)
+        .post("/api/articles")
+        .send({
+          author: "butter_bridge",
+          title: "new title",
+          body: "new body",
+          topic: "cats",
+          article_img_url:
+            "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+        })
+        .expect(201)
+        .then(({ body: { article } }) => {
+          expect(article.author).toBe("butter_bridge");
+          expect(article.title).toBe("new title");
+          expect(article.body).toBe("new body");
+          expect(article.topic).toBe("cats");
+          expect(article.article_img_url).toBe(
+            "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700"
+          );
+          expect(typeof article.article_id).toBe("number");
+          expect(typeof article.created_at).toBe("string");
+          expect(article.votes).toBe(0);
+          expect(article.comment_count).toBe(0);
+        });
+    });
+    it("responds 201 - returns a newly created article object with the img url set to a default if it is not given", () => {
+      return request(app)
+        .post("/api/articles")
+        .send({
+          author: "butter_bridge",
+          title: "new title",
+          body: "new body",
+          topic: "cats",
+        })
+        .expect(201)
+        .then(({ body: { article } }) => {
+          expect(article.article_img_url).toBe(
+            "https://images.pexels.com/photos/97050/pexels-photo-97050.jpeg?w=700&h=700"
+          );
+        });
+    });
+    it("responds 400 - returns an error message if author is not given", () => {
+      return request(app)
+        .post("/api/articles")
+        .send({
+          title: "new title",
+          body: "new body",
+          topic: "cats",
+          article_img_url:
+            "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+        })
+        .expect(400)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("Invalid request body");
+        });
+    });
+    it("responds 400 - returns an error message if title is not given", () => {
+      return request(app)
+        .post("/api/articles")
+        .send({
+          author: "butter_bridge",
+          body: "new body",
+          topic: "cats",
+          article_img_url:
+            "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+        })
+        .expect(400)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("Invalid request body");
+        });
+    });
+    it("responds 400 - returns an error message if body is not given", () => {
+      return request(app)
+        .post("/api/articles")
+        .send({
+          author: "butter_bridge",
+          title: "new title",
+          topic: "cats",
+          article_img_url:
+            "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+        })
+        .expect(400)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("Invalid request body");
+        });
+    });
+    it("responds 400 - returns an error message if topic is not given", () => {
+      return request(app)
+        .post("/api/articles")
+        .send({
+          author: "butter_bridge",
+          title: "new title",
+          body: "new body",
+          article_img_url:
+            "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+        })
+        .expect(400)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("Invalid request body");
+        });
+    });
+    it("responds 404 - if the given topic does not exist", () => {
+      return request(app)
+        .post("/api/articles")
+        .send({
+          author: "butter_bridge",
+          title: "new title",
+          body: "new body",
+          topic: "does not exist",
+        })
+        .expect(404)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("Topic does not exist");
+        });
+    });
+    it("responds 404 - if the given user does not exist", () => {
+      return request(app)
+        .post("/api/articles")
+        .send({
+          author: "not a user",
+          title: "new title",
+          body: "new body",
+          topic: "cats",
+        })
+        .expect(404)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("User does not exist");
+        });
+    });
+  });
 });
 
 describe("PATCH requests", () => {

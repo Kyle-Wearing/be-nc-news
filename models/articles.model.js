@@ -80,4 +80,41 @@ function updateArticleById(id, { inc_votes }) {
     });
 }
 
-module.exports = { selectArticleById, selectArticles, updateArticleById };
+function insertArticle(newArticle, validTopics) {
+  const { author, title, body, topic, article_img_url } = newArticle;
+  if (!validTopics.includes(topic) && topic !== undefined) {
+    return Promise.reject({ status: 404, msg: "Topic does not exist" });
+  }
+  const values = [author, title, body, topic];
+  let queryStr = `INSERT INTO articles
+  (author, title, body, topic`;
+  if (article_img_url) {
+    values.push(article_img_url);
+    queryStr += ", article_img_url)";
+  } else {
+    queryStr += ")";
+  }
+  queryStr += `VALUES(
+  $1,
+  $2,
+  $3,
+  $4
+  `;
+  if (article_img_url) {
+    queryStr += ", $5)";
+  } else {
+    queryStr += ")";
+  }
+  queryStr += "RETURNING *;";
+  return db.query(queryStr, values).then(({ rows }) => {
+    rows[0].comment_count = 0;
+    return rows[0];
+  });
+}
+
+module.exports = {
+  selectArticleById,
+  selectArticles,
+  updateArticleById,
+  insertArticle,
+};
