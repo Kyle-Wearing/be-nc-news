@@ -128,7 +128,6 @@ function removeArticleById(id) {
       [id]
     )
     .then(({ rows }) => {
-      console.log(rows);
       if (rows.length === 0) {
         return Promise.reject({ status: 404, msg: "Article does not exist" });
       }
