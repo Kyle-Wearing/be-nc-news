@@ -27,31 +27,19 @@ function selectUserByUsername(username) {
     });
 }
 
-function insertUser({ username, name, avatar_url }) {
+function insertUser({ username, name }) {
   if (!username || !name) {
     return Promise.reject({ status: 400, msg: "Invalid request body" });
   }
   const queryArr = [username, name];
   let queryStr = `INSERT INTO users
-  (username, name`;
-
-  if (avatar_url) {
-    queryArr.push(avatar_url);
-    queryStr += `, avatar_url`;
-  }
-
-  queryStr += `)
-  VALUES(
-  $1,
-  $2`;
-
-  if (avatar_url) {
-    queryStr += `,$3`;
-  }
-
-  queryStr += ") RETURNING *;";
+  (username, name)
+  VALUES
+  ($1,
+  $2) RETURNING *`;
 
   return db.query(queryStr, queryArr).then(({ rows }) => {
+    console.log(rows[0]);
     return rows[0];
   });
 }
