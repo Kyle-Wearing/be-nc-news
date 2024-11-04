@@ -569,6 +569,28 @@ describe("POST requests", () => {
         });
     });
   });
+  describe("/api/users", () => {
+    it("responds 201 - returns a newly created user object and url should use default", () => {
+      return request(app)
+        .post("/api/users")
+        .send({ username: "test_username", name: "test name" })
+        .expect(201)
+        .then(({ body: { user } }) => {
+          expect(user.username).toBe("test_username");
+          expect(user.name).toBe("test name");
+          expect(user.username).toBe("test_username");
+        });
+    });
+    it("responds 400 - returns an error message is a user is being posted with an already existing username", () => {
+      return request(app)
+        .post("/api/users")
+        .send({ username: "butter_bridge", name: "test name" })
+        .expect(400)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("Already exists");
+        });
+    });
+  });
 });
 
 describe("PATCH requests", () => {
