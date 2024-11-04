@@ -135,6 +135,16 @@
       "description": "description of topic"
     }
   },
+  "POST /api/users": {
+    "description": "posts a new user",
+    "queries": ["username(required), name(required), avatar_url(optional)"],
+    "exampleResponse": {
+      "username": "new username",
+      "name": "new name",
+      "avatar_url": "https://cdn-icons-png.flaticon.com/512/10398/10398223.png"
+    }
+  },
+
   "PATCH /api/articles/:article_id": {
     "description": "updates an articles votes",
     "queries": ["inc_votes"],
