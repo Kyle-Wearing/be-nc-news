@@ -39,7 +39,6 @@ function insertUser({ username, name }) {
   $2) RETURNING *`;
 
   return db.query(queryStr, queryArr).then(({ rows }) => {
-    console.log(rows[0]);
     return rows[0];
   });
 }

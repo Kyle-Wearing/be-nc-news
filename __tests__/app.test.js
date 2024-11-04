@@ -578,7 +578,9 @@ describe("POST requests", () => {
         .then(({ body: { user } }) => {
           expect(user.username).toBe("test_username");
           expect(user.name).toBe("test name");
-          expect(user.username).toBe("test_username");
+          expect(user.avatar_url).toBe(
+            "https://cdn-icons-png.flaticon.com/512/10398/10398223.png"
+          );
         });
     });
     it("responds 400 - returns an error message is a user is being posted with an already existing username", () => {
