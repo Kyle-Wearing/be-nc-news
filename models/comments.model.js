@@ -6,7 +6,7 @@ function selectCommentsByArticleId(id, limit = 10, p = 1) {
     .query(
       `SELECT * FROM comments
     WHERE article_id = $1
-    ORDER BY created_at
+    ORDER BY created_at DESC
     LIMIT $2 OFFSET $3;`,
       [id, limit, offset]
     )

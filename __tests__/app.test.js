@@ -322,7 +322,7 @@ describe("GET requests", () => {
         .get("/api/articles/1/comments?limit=2&p=3")
         .expect(200)
         .then(({ body: { comments } }) => {
-          expect(comments[0].comment_id).toBe(6);
+          expect(comments[0].comment_id).toBe(7);
           expect(comments.length).toBe(2);
           comments.forEach((comment) => {
             expect(comment.article_id).toBe(1);
