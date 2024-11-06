@@ -148,6 +148,17 @@ describe("GET requests", () => {
           expect(articles).toBeSorted({ key: "votes", descending: true });
         });
     });
+    it("should order the articles by comment count if given a sort by query of comment_count", () => {
+      return request(app)
+        .get("/api/articles?sort_by=comment_count")
+        .expect(200)
+        .then(({ body: { articles } }) => {
+          expect(articles).toBeSorted({
+            key: "comment_count",
+            descending: true,
+          });
+        });
+    });
     it("should sort in ascending order if given order query asc", () => {
       return request(app)
         .get("/api/articles?sort_by=article_id&order=asc")

@@ -34,7 +34,14 @@ function selectArticles(
     ON comments.article_id = articles.article_id
     `;
 
-  const validSortBy = ["article_id", "votes", "title", "created_at", "author"];
+  const validSortBy = [
+    "article_id",
+    "votes",
+    "title",
+    "created_at",
+    "author",
+    "comment_count",
+  ];
   const validOrder = ["desc", "asc"];
 
   if (!validSortBy.includes(sort_by) || !validOrder.includes(order)) {
